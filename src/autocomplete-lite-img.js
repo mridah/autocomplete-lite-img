@@ -14,14 +14,13 @@
                    var autocomplete_images = ["person1.png", "person2.png", "person3.png", "person4.png", "person5", "person6.png"];
                    
                    // initializing
-                   $('#autocomplete_input').autocomplete_init(autocomplete_items, autocomplete_images);
+                   $('#autocomplete_input').autocomplete_img_init(autocomplete_items, autocomplete_images);
                </script>
 */
 
-var mridautocomplete_timer = 0;
 
 jQuery.fn.extend({
-    autocomplete_init: function (item_data, image_data) {
+    autocomplete_img_init: function (item_data, image_data) {
         me = $(this);
 
         var item_data_length = item_data.length; 
@@ -42,6 +41,8 @@ jQuery.fn.extend({
 
 
 function mridautocomplete(input, item_data, image_data) {
+
+    var mridautocomplete_timer = 0;
 
     if(!$('#mridautocomplete_css').length )
     {
