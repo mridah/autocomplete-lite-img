@@ -130,7 +130,7 @@ function mridautocomplete(input, item_data, image_data) {
             'overflow-x': 'hidden',
             'font-family': input.css('font-family'),
             'font-size' : input.css('font-size'),
-            'z-index' : '10'
+            'z-index' : '8888'
         }).insertAfter(input).show();
     };
 
