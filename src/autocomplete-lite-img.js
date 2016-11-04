@@ -18,6 +18,7 @@
                </script>
 */
 
+(function($) {
 
 jQuery.fn.extend({
     autocomplete_img_init: function (item_data, image_data, callback) {
@@ -87,15 +88,9 @@ function mridautocomplete(input, item_data, image_data, callback) {
 
     var changeInput = function(input, item_dataList) {
         var val = input.val().toLowerCase();
-        var inputAncestor = input.parent();
-        var res = inputAncestor.find('.mridautocomplete-list');
-        while(res.length == 0) {
-          inputAncestor = inputAncestor.parent();
-          res = inputAncestor.find('.mridautocomplete-list');
-        }
+        var res = input.next();
 
         res.empty().hide();
-
 
         var autoCompleteResult = matchitem_data(val, item_dataList);
         if (val == "" || autoCompleteResult.length == 0) {
@@ -230,3 +225,5 @@ function mridautocomplete(input, item_data, image_data, callback) {
       }
     });
 }
+
+})(jQuery);
