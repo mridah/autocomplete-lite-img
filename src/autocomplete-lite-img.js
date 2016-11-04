@@ -88,7 +88,7 @@ function mridautocomplete(input, item_data, image_data, callback) {
 
     var changeInput = function(input, item_dataList) {
         var val = input.val().toLowerCase();
-        var res = input.next();
+        var res = input.next(); /* res is the autocomplete div which is added immediately after the input */
 
         res.empty().hide();
 
