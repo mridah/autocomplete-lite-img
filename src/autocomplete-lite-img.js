@@ -20,10 +20,24 @@
 
 
 jQuery.fn.extend({
-    autocomplete_img_init: function (item_data, image_data) {
+    autocomplete_img_init: function (item_data, image_data, callback) {
         me = $(this);
 
+        if(callback === undefined)
+        {
+            callback = callback_dummy;
+        }
+        else
+        {
+           if(! typeof callback == 'function')
+           {
+                console.error('Error : autocomplete-lite ' + callback + ' is not a function.');
+                return;
+           }
+        }
+
         var item_data_length = item_data.length; 
+
         if(item_data_length === image_data.length)
         {
             var img_map = {};
@@ -32,15 +46,18 @@ jQuery.fn.extend({
                 img_map[item_data[i].toLowerCase()] = image_data[i];
             }
 
-            mridautocomplete(me, item_data, img_map);
+            mridautocomplete(me, item_data, img_map, callback);
         }
         else
             console.error('Error : autocomplete-lite item count does not match the images count.');
+
+
     }
 });
 
+function callback_dummy() {}
 
-function mridautocomplete(input, item_data, image_data) {
+function mridautocomplete(input, item_data, image_data, callback) {
 
     var mridautocomplete_timer = 0;
 
@@ -110,6 +127,7 @@ function mridautocomplete(input, item_data, image_data) {
             p.click(function() {
                 input.val(p.text());
                 res.empty().hide();
+                callback.call(this);
             });
 
             p.mouseenter(function() {
@@ -197,16 +215,14 @@ function mridautocomplete(input, item_data, image_data) {
             tmp = input.next().find('.item-selected');
             input.val(tmp.text());
             res.empty().hide();
+            callback.call(this);
         }
         else
         {
             clearTimeout(mridautocomplete_timer);
         }
     });
-
-    function search(input, item_dataList) {
-        console.log(mridautocomplete_srch);
-    }
+    
 
     $(document).click(function(event) {
       if (!$(event.target).closest('.mridautocomplete-list').length) {
