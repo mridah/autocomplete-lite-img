@@ -2,7 +2,7 @@
     Written by mridul ahuja
     HOW TO USE :
         >> Load JQuery library
-        >> Load autocomplete-lite.js library
+        >> Load autocomplete-lite-img.js library
         >> Initialize autocomplete on element and pass autocomplete list as an array
      
            EXAMPLE :
@@ -110,10 +110,15 @@ function mridautocomplete(input, item_data, image_data) {
             p.click(function() {
                 input.val(p.text());
                 res.empty().hide();
-            })
+            });
+
             p.mouseenter(function() {
+                $('.mrid-autocomplete-item').css("background-color", "white");
+                $('.mrid-autocomplete-item').removeClass('item-selected');
+                $(this).addClass('item-selected');
                 $(this).css("background-color", "#DCDCDC");
             }).mouseleave(function() {
+                $(this).removeClass('item-selected');
                 $(this).css("background-color", "white");
             });
             res.append(p);
@@ -137,15 +142,66 @@ function mridautocomplete(input, item_data, image_data) {
     var res = $("<div class='mridautocomplete-list' />");
     res.insertAfter(input);
 
-    input.keyup(function() {
-        clearTimeout(mridautocomplete_timer);
-        mridautocomplete_timer = setTimeout(function() {
-                changeInput(input, item_dataList);
-        }, 100); 
+    input.keyup(function(e) {
+        /* if key pressed is not enter or arrow keys */
+        if(e.keyCode != 37 && e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40 && e.keyCode != 13)
+        {
+            clearTimeout(mridautocomplete_timer);
+            mridautocomplete_timer = setTimeout(function() {
+               changeInput(input, item_dataList);
+            }, 100); 
+        }
+
     });
 
-    input.keydown(function() {
+    input.keydown(function(e) {
+        if(e.keyCode == 40) /* down arrow */
+        {   
+            e.preventDefault();
+            var tmp;
+            $('mrid-autocomplete-item').css("background-color", "white");
+            if(input.next().find('.item-selected').length > 0)
+            {
+                tmp = input.next().find('.item-selected');
+                tmp.css("background-color", "white");
+                tmp.removeClass('item-selected');
+                tmp.next().css("background-color", "#DCDCDC");
+                tmp.next().addClass('item-selected');
+            }
+            else
+            {
+                first = input.next().find('.mrid-autocomplete-item').first();
+                first.css("background-color", "#DCDCDC");
+                first.addClass('item-selected');
+                tmp = first;
+            }
+
+        }
+        else if(e.keyCode == 38) /* up arrow */
+        {
+            e.preventDefault();
+            var tmp;
+            $('mrid-autocomplete-item').css("background-color", "white");
+            if(input.next().find('.item-selected').length > 0)
+            {
+                tmp = input.next().find('.item-selected');
+                tmp.css("background-color", "white");
+                tmp.removeClass('item-selected');
+                tmp.prev().css("background-color", "#DCDCDC");
+                tmp.prev().addClass('item-selected');
+            }
+
+        }
+        else if(e.keyCode == 13) /* enter key */
+        {
+            tmp = input.next().find('.item-selected');
+            input.val(tmp.text());
+            res.empty().hide();
+        }
+        else
+        {
             clearTimeout(mridautocomplete_timer);
+        }
     });
 
     function search(input, item_dataList) {
