@@ -22,7 +22,7 @@
 
 jQuery.fn.extend({
     autocomplete_img_init: function (item_data, image_data, callback) {
-        me = $(this);
+        me = this;
 
         if(callback === undefined)
         {
@@ -60,12 +60,15 @@ function callback_dummy() {}
 
 function mridautocomplete(input, item_data, image_data, callback) {
 
-    var mridautocomplete_timer = 0;
+    var mridautocomplete_timer = 0, img_dimensions;
 
+    /* not defining img dimensions in style since different initializations of the plugin can have different image sizes */
+    img_dimensions = (parseInt(input.css('font-size')) - 2 ) + 'px';
+
+    /* adding common css styling for this plugin in case it's not already defined */
     if(!$('#mridautocomplete_css').length )
-    {
-        var img_dimensions = (parseInt(input.css('font-size')) - 2 ) + 'px';
-        $('body').prepend('<style id="mridautocomplete_css">.mridautocomplete-list::-webkit-scrollbar{width: 12px;}.mridautocomplete-list::-webkit-scrollbar-track{-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);border-radius: 2px;}.mridautocomplete-list::-webkit-scrollbar-thumb{border-radius: 2px;-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);} .mridautocomplete-item-image{height: ' + img_dimensions + '; width: ' + img_dimensions + ';} </style>');
+    {        
+        $('body').prepend('<style id="mridautocomplete_css">.mridautocomplete-list::-webkit-scrollbar{width: 12px;}.mridautocomplete-list::-webkit-scrollbar-track{-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);border-radius: 2px;}.mridautocomplete-list::-webkit-scrollbar-thumb{border-radius: 2px;-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);} </style>');
     }
 
     var item_dataList = [];
@@ -116,7 +119,7 @@ function mridautocomplete(input, item_data, image_data, callback) {
                 var first_part = e.split(val)[0];
                 var second_part = e.split(val).splice(1).join(val); 
 
-                p.html('<img src="' + image_data[e] + '" class="mridautocomplete-item-image">' + first_part + '<span style="color: #4682B4; font-weight: bold;">' + val + '</span>' + second_part);
+                p.html('<img src="' + image_data[e] + '" class="mridautocomplete-item-image" style="height: ' + img_dimensions + '; width: ' + img_dimensions + ';" onerror="this.src=\'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7\'; this.removeAttribute(\'onerror\'); this.removeAttribute(\'onload\');" onload="this.removeAttribute(\'onerror\'); this.removeAttribute(\'onload\');">' + first_part + '<span style="color: #4682B4; font-weight: bold;">' + val + '</span>' + second_part);
             }
 
             p.click(function() {
