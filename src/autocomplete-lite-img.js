@@ -155,7 +155,7 @@ function mridautocomplete(input, item_data, image_data, callback) {
         }).insertAfter(input).show();
     };
 
-    var res = $("<div class='mridautocomplete-list' />");
+    var res = $("<div class='mridautocomplete-list' style='display: none;'/>");
     res.insertAfter(input);
 
     input.keyup(function(e) {
@@ -225,7 +225,7 @@ function mridautocomplete(input, item_data, image_data, callback) {
     $(document).click(function(event) {
       if (!$(event.target).closest('.mridautocomplete-list').length) {
         res.removeAttr('style');
-        res.empty();
+        res.empty().hide();
       }
     });
 }
