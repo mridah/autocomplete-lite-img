@@ -124,8 +124,9 @@ function mridautocomplete(input, item_data, image_data, callback) {
 
             p.click(function() {
                 input.val(p.text());
-                res.empty().hide();
-                callback.call(this);
+                res.empty().hide(function(){
+                    callback.call(this);
+                });
             });
 
             p.mouseenter(function() {
@@ -212,8 +213,9 @@ function mridautocomplete(input, item_data, image_data, callback) {
         {
             tmp = input.next().find('.item-selected');
             input.val(tmp.text());
-            res.empty().hide();
-            callback.call(this);
+            res.empty().hide(function(){
+                callback.call(this);
+            });
         }
         else
         {
