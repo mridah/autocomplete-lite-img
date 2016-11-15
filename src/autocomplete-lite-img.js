@@ -224,7 +224,8 @@ function mridautocomplete(input, item_data, image_data, callback) {
 
     $(document).click(function(event) {
       if (!$(event.target).closest('.mridautocomplete-list').length) {
-        res.empty().hide();
+        res.removeAttr('style');
+        res.empty();
       }
     });
 }
