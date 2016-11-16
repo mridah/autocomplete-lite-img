@@ -1,28 +1,51 @@
 /*
-    Written by mridul ahuja
+    Author : mridul ahuja
+    Github : https://github.com/mridah/autocomplete-lite-img
+
     HOW TO USE :
-        >> Load JQuery library
-        >> Load autocomplete-lite-img.js library
-        >> Initialize autocomplete on element and pass autocomplete list as an array
+
+    >> Load JQuery library
+    >> Load autocomplete-lite-img.js library
+    >> Initialize autocomplete on element and pass autocomplete list as an array
      
-           EXAMPLE :
-               <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-               <script src="autocomplete-lite-img.js"></script>
-               <input type="text" id="autocomplete_input">
-               <script>
-                   var autocomplete_items = ["person1", "person2", "person3", "person4", "person5", "person6"];
-                   var autocomplete_images = ["person1.png", "person2.png", "person3.png", "person4.png", "person5", "person6.png"];
+    EXAMPLE :
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="autocomplete-lite-img.js"></script>
+    <input type="text" id="autocomplete_input">
+    <script>
+        var autocomplete_items = ["person1", "person2", "person3", "person4", "person5", "person6"];
+        var autocomplete_images = ["person1.png", "person2.png", "person3.png", "person4.png", "person5", "person6.png"];
                    
-                   // initializing
-                   $('#autocomplete_input').autocomplete_img_init(autocomplete_items, autocomplete_images);
-               </script>
+        function callback_function(elem)
+        {
+            alert("Selected : " + elem.val());
+        }
+
+        // initializing
+        $('#autocomplete_input').autocomplete_img_init({
+            items: autocomplete_items, 
+            images: autocomplete_images,
+            callback: callback_function
+        });
+    </script>
+
 */
 
 (function($) {
 
 jQuery.fn.extend({
-    autocomplete_img_init: function (item_data, image_data, callback) {
-        me = this;
+    autocomplete_img_init: function (params) {
+        self = this;
+
+        var defaults = {
+                items: '',
+                images: '',
+            };
+
+        params = $.extend(defaults, params);
+
+        var item_data = params.items, callback = params.callback, image_data = params.images;
 
         if(callback === undefined)
         {
@@ -30,9 +53,10 @@ jQuery.fn.extend({
         }
         else
         {
-           if(! typeof callback == 'function')
+           if(typeof callback !== 'function')
            {
-                console.error('Error : autocomplete-lite ' + callback + ' is not a function.');
+                let error_item = self.attr('id') != undefined ? '#' + self.attr('id') : '.' + self.get(0).classList;
+                console.error('Error : autocomplete-lite-img failed to initialize on [' + error_item + ']. ' + callback + ' is not a function');
                 return;
            }
         }
@@ -47,11 +71,13 @@ jQuery.fn.extend({
                 img_map[item_data[i].toLowerCase()] = image_data[i];
             }
 
-            mridautocomplete(me, item_data, img_map, callback);
+            mridautocomplete(self, item_data, img_map, callback);
         }
         else
-            console.error('Error : autocomplete-lite item count does not match the images count.');
-
+        {
+            let error_item = self.attr('id') != undefined ? '#' + self.attr('id') : '.' + self.get(0).classList;
+            console.error('Error : autocomplete-lite-img failed to initialize on [' + error_item + ']. Item count does not match the image count');
+        }
 
     }
 });
@@ -76,7 +102,8 @@ function mridautocomplete(input, item_data, image_data, callback) {
     if (Array.isArray(item_data)) {
         item_dataList = item_dataList.concat(item_data);
     } else {
-        console.error('Error : autocomplete-lite takes an array as parameter. ' + typeof item_data + ' given');
+        let error_item = input.attr('id') != undefined ? '#' + input.attr('id') : '.' + input.get(0).classList;
+        console.error('Error : autocomplete-lite-img failed to initialize on [' + error_item + ']. Expected array, ' + typeof item_data + ' given');
         return;
     }
 
@@ -101,7 +128,7 @@ function mridautocomplete(input, item_data, image_data, callback) {
         }
 
         autoCompleteResult.forEach(function(e) {
-            var p = $('<p />');
+            var p = $('<div />');
             p.css({
               'margin': '0px',
               'padding-left': parseInt(input.css('padding-left'),10) + parseInt(input.css('border-left-width'),10),
@@ -125,7 +152,7 @@ function mridautocomplete(input, item_data, image_data, callback) {
             p.click(function() {
                 input.val(p.text());
                 res.empty().hide(function(){
-                    callback.call(this);
+                    callback.call(this, input);
                 });
             });
 
@@ -214,7 +241,7 @@ function mridautocomplete(input, item_data, image_data, callback) {
             tmp = input.next().find('.item-selected');
             input.val(tmp.text());
             res.empty().hide(function(){
-                callback.call(this);
+                callback.call(this, input);
             });
         }
         else
