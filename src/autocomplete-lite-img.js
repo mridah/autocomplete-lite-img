@@ -66,7 +66,7 @@ jQuery.fn.extend({
         if(item_data_length === image_data.length)
         {
             var img_map = {};
-            for(var i=0; i<item_data_length; i++)
+            for(let i=0; i<item_data_length; i++)
             {
                 img_map[item_data[i].toLowerCase() + '#' + i] = image_data[i];
             }
@@ -121,7 +121,7 @@ function mridautocomplete(input, item_data, image_data, callback) {
         text = text.toLowerCase();
         var found = 0;
         var nextChar = input.charAt(found);
-        for (var i=0, l=text.length; i<l; i++) {
+        for (let i=0, l=text.length; i<l; i++) {
             if (text.charAt(i) === nextChar) {
                 found++;
                 if (found === input.length)
@@ -298,7 +298,7 @@ function mridautocomplete(input, item_data, image_data, callback) {
             clearTimeout(mridautocomplete_timer);
         }
     });
-    
+
 
     $(document).click(function(event) {
       if (!$(event.target).closest('.mridautocomplete-list').length) {

@@ -1,0 +1,156 @@
+<html>
+
+    <head>
+        <title> Autocomplete-Lite-Img Demo </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+        <script src="src/autocomplete-lite-img.js"></script>
+
+        <style>
+            #car_company{
+                width: 50%;
+                font-size: 50px;
+                border-top: none;
+                border-left: none;
+                border-right: none;
+                border-bottom: 2px solid black;
+            }
+
+            #car_company:focus{
+                outline: none;
+                border-bottom: 2px solid green;
+            }
+
+        </style>
+    </head>
+ 
+    <body>
+ 
+        <center><h2>Autocomplete-Lite-Img Demo</h2></center>
+
+        <center><h3><div style="margin-top: 10%;">Type a car maufacturer's name</div></h3></center>
+
+        <center><input type="text" id="car_company" class="car-company" autocomplete="off"  autocorrect="off"/></center>
+
+        <script>
+
+            /* creating array */
+            var cars_list = ["Acura", 
+                 "Alfa Romeo", 
+                 "Aston Martin", 
+                 "Audi", 
+                 "Bentley", 
+                 "BMW", 
+                 "Bugatti", 
+                 "Buick", 
+                 "Cadillac", 
+                 "Chevrolet", 
+                 "Chrysler", 
+                 "Citroen", 
+                 "Dodge", 
+                 "Ferrari", 
+                 "Fiat", 
+                 "Ford", 
+                 "Geely", 
+                 "General Motors", 
+                 "GMC", 
+                 "Honda", 
+                 "Hyundai", 
+                 "Infiniti", 
+                 "Jaguar", 
+                 "Jeep", 
+                 "Kia", 
+                 "Koenigsegg", 
+                 "Lamborghini", 
+                 "Land Rover", 
+                 "Lexus", 
+                 "Maserati", 
+                 "Mazda", 
+                 "McLaren", 
+                 "Mercedes-Benz", 
+                 "Mini", 
+                 "Mitsubishi", 
+                 "Nissan", 
+                 "Pagani", 
+                 "Peugeot", 
+                 "Porsche", 
+                 "Ram", 
+                 "Renault", 
+                 "Rolls Royce", 
+                 "Saab", 
+                 "Subaru", 
+                 "Suzuki", 
+                 "Tata Motors", 
+                 "Tesla", 
+                 "Toyota", 
+                 "Volkswagen", 
+                 "Volvo"
+                ];
+
+            var cars_logos = ["https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/Acura-Logo.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/alfa-romeo-logo.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/aston-martin-logo1.jpg", 
+                  "http://pngimg.com/upload/car_logo_PNG1640.png", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/Bentley-Logo.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/bmw-logo.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/bugatti-logo.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/Buick-Logo.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/Cadillac-Logo.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/Chevrolet-Logo.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2015/01/Chrysler-Logo.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/citroen-logo.jpg", 
+                  "http://www.clipartkid.com/images/309/dodge-logo-dodge-logo-historydodge-logo-floor-matsdodge-logo-vector-uHCcnr-clipart.gif", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/ferrari-logo.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/fiat-logo.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/ford-logo.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/Geely-Logo1.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2015/01/General-Motors-Logo.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/GMC-Logo.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/honda-logo.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/hyundai-logo.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/Infiniti-Logo.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/jaguar-cars-logo1.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/Jeep-Logo.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/Kia-Motors-Logo.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2015/02/Koenigsegg.jpg", 
+                  "http://logodatabases.com/wp-content/uploads/2012/01/lamborghini-logo.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/land-rover-logo1.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/lexus-logo.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/maserati-logo.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/mazda-logo.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/mclaren-logo1.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/Mercedes-Benz-Logo.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/Mini-Car-Logo1.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/Mitsubishi-Motors-Logo.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/nissan-logo.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/Pagani.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/Peugeot-Logo.jpg", 
+                  "http://seeklogo.com/images/P/porsche-logo-4ED16BAFB1-seeklogo.com.gif", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2015/03/RAM-Logo.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/renault-logo.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/Rolls-Royce-Logo.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2015/02/Saab.jpg", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2015/01/Subaru-Logo.jpg", 
+                  "https://seeklogo.com/images/S/suzuki-logo-5311518DD9-seeklogo.com.gif", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2015/01/TATA-Motors.jpg", 
+                  "http://www.officialpsds.com/images/thumbs/Tesla-Motors-psd94354.png", 
+                  "https://8096-presscdn-0-43-pagely.netdna-ssl.com/wp-content/uploads/2014/10/toyota-logo1.jpg", 
+                  "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Volkswagen_Logo.png/769px-Volkswagen_Logo.png", 
+                  "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcT7A6EStI1gHPdMdvKhHKNGzGMQ-FQy4ydy1agy50VtfdhFR9Ob"
+                ];
+
+            function callback(elem, index)
+            {
+                alert("You selected " +elem.val() + '. Item index : ' + index);
+            }
+
+            /* initializing autocomplete */
+            $('#car_company').autocomplete_img_init({
+                items: cars_list, 
+                images: cars_logos, 
+                callback: callback /* <-- this argument is optional */
+            });
+
+        </script>
+
+    </body>
+</html>

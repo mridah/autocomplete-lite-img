@@ -1,7 +1,7 @@
 # autocomplete-lite-img
 autocomplete-lite-img is a lightweight JQuery-based autocomplete plugin. It supports images and callback functions.
 
-[DEMO](https://jsfiddle.net/pjtnpLn7/8/)
+[DEMO](https://jsfiddle.net/pjtnpLn7/10/)
 
 ## Usage :
 
