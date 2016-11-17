@@ -107,7 +107,16 @@ function mridautocomplete(input, item_data, image_data, callback) {
         return;
     }
 
-    var isSubstring  = function(input, text) {
+    /* 
+        this function will return true even if text partially matches input
+
+        Example : is_substring_exact('ple', 'apple') => true
+                  is_substring_exact('pe', 'apple') => true
+                                             ^  ^
+                  is_substring_exact('banna', 'banana') => true
+                                               ^^^ ^^
+    */
+    var is_substring_partial  = function(input, text) {
         input = input.toLowerCase();
         text = text.toLowerCase();
         var found = 0;
@@ -122,9 +131,26 @@ function mridautocomplete(input, item_data, image_data, callback) {
         }
     };
 
+    /* 
+        this function will return true if text contains input
+
+        Example : is_substring_exact('ple', 'apple') => true
+                  is_substring_exact('pe', 'apple') => false
+    */
+    var is_substring_exact  = function(input, text) {
+        input = input.toLowerCase();
+        text = text.toLowerCase();
+        if(text.includes(input)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    };
+
     var matchitem_data = function(input, item_dataList) {
         var result = item_dataList.map(function(item, index) {
-            if (isSubstring(input, item)) {
+            if (is_substring_exact(input, item)) {
                 return [item, index];
             }
             return 0;
@@ -145,6 +171,8 @@ function mridautocomplete(input, item_data, image_data, callback) {
 
         autoCompleteResult.forEach(function(e) {
             var p = $('<div />');
+            var to_ins = false;
+
             p.css({
               'margin': '0px',
               'padding-left': parseInt(input.css('padding-left'),10) + parseInt(input.css('border-left-width'),10),
@@ -160,15 +188,17 @@ function mridautocomplete(input, item_data, image_data, callback) {
             if(e[0].includes(val))
             {
                 var first_part = e[0].split(val)[0];
-                var second_part = e[0].split(val).splice(1).join(val); 
+                var second_part = e[0].split(val).splice(1).join(val);
 
+                p.attr('_ix', e[1]);
                 p.html('<img src="' + image_data[e[0]+'#'+e[1]] + '" class="mridautocomplete-item-image" style="height: ' + img_dimensions + '; width: ' + img_dimensions + ';" onerror="this.src=\'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7\'; this.removeAttribute(\'onerror\'); this.removeAttribute(\'onload\');" onload="this.removeAttribute(\'onerror\'); this.removeAttribute(\'onload\');">' + first_part + '<span style="color: #4682B4; font-weight: bold;">' + val + '</span>' + second_part);
+                to_ins = true;
             }
 
             p.click(function() {
                 input.val(p.text());
                 res.empty().hide(function(){
-                    callback.call(this, input);
+                    callback.call(this, input, p.attr('_ix'));
                 });
             });
 
@@ -181,7 +211,10 @@ function mridautocomplete(input, item_data, image_data, callback) {
                 $(this).removeClass('item-selected');
                 $(this).css("background-color", "white");
             });
-            res.append(p);
+
+            if(to_ins){
+                res.append(p);
+            }
         });
 
         res.css({
@@ -257,7 +290,7 @@ function mridautocomplete(input, item_data, image_data, callback) {
             tmp = input.next().find('.item-selected');
             input.val(tmp.text());
             res.empty().hide(function(){
-                callback.call(this, input);
+                callback.call(this, input, tmp.attr('_ix'));
             });
         }
         else
