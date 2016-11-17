@@ -38,6 +38,13 @@ jQuery.fn.extend({
     autocomplete_img_init: function (params) {
         self = this;
 
+        /* checking if element exists */
+        if(! self.length)
+        {
+            console.error('Error : autocomplete-lite-img failed to initialize on [' + self.selector + ']. ' + ' Element does not exist');
+            return;
+        }
+
         var defaults = {
                 items: '',
                 images: '',
@@ -55,8 +62,7 @@ jQuery.fn.extend({
         {
            if(typeof callback !== 'function')
            {
-                let error_item = self.attr('id') != undefined ? '#' + self.attr('id') : '.' + self.get(0).classList;
-                console.error('Error : autocomplete-lite-img failed to initialize on [' + error_item + ']. ' + callback + ' is not a function');
+                console.error('Error : autocomplete-lite-img failed to initialize on [' + self.selector + ']. ' + callback + ' is not a function');
                 return;
            }
         }
@@ -71,20 +77,34 @@ jQuery.fn.extend({
                 img_map[item_data[i].toLowerCase() + '#' + i] = image_data[i];
             }
 
-            mridautocomplete(self, item_data, img_map, callback);
+            mridautocomplete(self, self.selector, item_data, img_map, callback);
         }
         else
         {
-            let error_item = self.attr('id') != undefined ? '#' + self.attr('id') : '.' + self.get(0).classList;
-            console.error('Error : autocomplete-lite-img failed to initialize on [' + error_item + ']. Item count does not match the image count');
+            console.error('Error : autocomplete-lite-img failed to initialize on [' + self.selector + ']. Item count does not match the image count');
         }
 
+    },
+
+    autocomplete_img_destroy: function () {
+        self = this;
+
+        if(self.next().hasClass('mridautocomplete-list'))
+        {
+            /* removing autocomplete div */
+            self.next().remove();
+
+            /* removing event listeners */
+            self.off('keyup');
+            self.off('keydown');
+        }
     }
 });
 
+
 function callback_dummy() {}
 
-function mridautocomplete(input, item_data, image_data, callback) {
+function mridautocomplete(input, o_selector, item_data, image_data, callback) {
 
     var mridautocomplete_timer = 0, img_dimensions;
 
@@ -102,8 +122,7 @@ function mridautocomplete(input, item_data, image_data, callback) {
     if (Array.isArray(item_data)) {
         item_dataList = item_dataList.concat(item_data);
     } else {
-        let error_item = input.attr('id') != undefined ? '#' + input.attr('id') : '.' + input.get(0).classList;
-        console.error('Error : autocomplete-lite-img failed to initialize on [' + error_item + ']. Expected array, ' + typeof item_data + ' given');
+        console.error('Error : autocomplete-lite-img failed to initialize on [' + o_selector + ']. Expected array, ' + typeof item_data + ' given');
         return;
     }
 
@@ -249,7 +268,7 @@ function mridautocomplete(input, item_data, image_data, callback) {
 
     input.keydown(function(e) {
         if(e.keyCode == 40) /* down arrow */
-        {   
+        {
             e.preventDefault();
             var tmp;
             $('mrid-autocomplete-item').css("background-color", "white");
