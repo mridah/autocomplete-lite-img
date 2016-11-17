@@ -1,7 +1,7 @@
 # autocomplete-lite-img
 autocomplete-lite-img is a lightweight JQuery-based autocomplete plugin. It supports images and callback functions.
 
-[DEMO](https://jsfiddle.net/pjtnpLn7/7/)
+[DEMO](https://jsfiddle.net/pjtnpLn7/8/)
 
 ## Usage :
 
@@ -47,8 +47,7 @@ autocomplete-lite-img is a lightweight JQuery-based autocomplete plugin. It supp
 
 ## CDNs :
 
-1. [https://rawgit.com/mridah/autocomplete-lite-img/master/src/autocomplete-lite-img.js](https://rawgit.com/mridah/autocomplete-lite-img/master/src/autocomplete-lite-img.js)
-2. [https://cdn.rawgit.com/mridah/autocomplete-lite-img/b3ec899c84ea3332eba6c42df7ef76d1db86c07a/src/autocomplete-lite-img.js](https://cdn.rawgit.com/mridah/autocomplete-lite-img/b3ec899c84ea3332eba6c42df7ef76d1db86c07a/src/autocomplete-lite-img.js)
+[https://cdn.rawgit.com/mridah/autocomplete-lite-img/b3ec899c84ea3332eba6c42df7ef76d1db86c07a/src/autocomplete-lite-img.js](https://cdn.rawgit.com/mridah/autocomplete-lite-img/b3ec899c84ea3332eba6c42df7ef76d1db86c07a/src/autocomplete-lite-img.js)
 
 
 ## Report bugs and suggestions :
