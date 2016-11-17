@@ -110,10 +110,10 @@ function mridautocomplete(input, item_data, image_data, callback) {
     /* 
         this function will return true even if text partially matches input
 
-        Example : is_substring_exact('ple', 'apple') => true
-                  is_substring_exact('pe', 'apple') => true
+        Example : is_substring_partial('ple', 'apple') => true
+                  is_substring_partial('pe', 'apple') => true
                                              ^  ^
-                  is_substring_exact('banna', 'banana') => true
+                  is_substring_partial('banna', 'banana') => true
                                                ^^^ ^^
     */
     var is_substring_partial  = function(input, text) {
