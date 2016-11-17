@@ -7,7 +7,7 @@
     >> Load JQuery library
     >> Load autocomplete-lite-img.js library
     >> Initialize autocomplete on element and pass autocomplete list as an array
-     
+
     EXAMPLE :
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
@@ -16,10 +16,10 @@
     <script>
         var autocomplete_items = ["person1", "person2", "person3", "person4", "person5", "person6"];
         var autocomplete_images = ["person1.png", "person2.png", "person3.png", "person4.png", "person5", "person6.png"];
-                   
-        function callback_function(elem)
+
+        function callback_function(elem, index)
         {
-            alert("Selected : " + elem.val());
+            alert("Selected : " + elem.val() + '. Item index : ' + index);
         }
 
         // initializing
