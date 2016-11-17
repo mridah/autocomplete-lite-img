@@ -68,7 +68,7 @@ jQuery.fn.extend({
             var img_map = {};
             for(var i=0; i<item_data_length; i++)
             {
-                img_map[item_data[i].toLowerCase()] = image_data[i];
+                img_map[item_data[i].toLowerCase() + '#' + i] = image_data[i];
             }
 
             mridautocomplete(self, item_data, img_map, callback);
@@ -107,13 +107,29 @@ function mridautocomplete(input, item_data, image_data, callback) {
         return;
     }
 
-    var matchitem_data = function(input, item_dataList) {
-        var reg = new RegExp(input.split('').join('\\w*').replace(/\W/, ""), 'i');
-        return item_dataList.filter(function(item_data) {
-            if (item_data.match(reg)) {
-                return item_data;
+    var isSubstring  = function(input, text) {
+        input = input.toLowerCase();
+        text = text.toLowerCase();
+        var found = 0;
+        var nextChar = input.charAt(found);
+        for (var i=0, l=text.length; i<l; i++) {
+            if (text.charAt(i) === nextChar) {
+                found++;
+                if (found === input.length)
+                    return true;
+                nextChar = input.charAt(found);
             }
+        }
+    };
+
+    var matchitem_data = function(input, item_dataList) {
+        var result = item_dataList.map(function(item, index) {
+            if (isSubstring(input, item)) {
+                return [item, index];
+            }
+            return 0;
         });
+        return result.filter(isNaN);
     };
 
     var changeInput = function(input, item_dataList) {
@@ -139,14 +155,14 @@ function mridautocomplete(input, item_data, image_data, callback) {
 
             p.addClass('mrid-autocomplete-item');
 
-            e = e.toLowerCase();
+            e[0] = e[0].toLowerCase();
 
-            if(e.includes(val))
+            if(e[0].includes(val))
             {
-                var first_part = e.split(val)[0];
-                var second_part = e.split(val).splice(1).join(val); 
+                var first_part = e[0].split(val)[0];
+                var second_part = e[0].split(val).splice(1).join(val); 
 
-                p.html('<img src="' + image_data[e] + '" class="mridautocomplete-item-image" style="height: ' + img_dimensions + '; width: ' + img_dimensions + ';" onerror="this.src=\'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7\'; this.removeAttribute(\'onerror\'); this.removeAttribute(\'onload\');" onload="this.removeAttribute(\'onerror\'); this.removeAttribute(\'onload\');">' + first_part + '<span style="color: #4682B4; font-weight: bold;">' + val + '</span>' + second_part);
+                p.html('<img src="' + image_data[e[0]+'#'+e[1]] + '" class="mridautocomplete-item-image" style="height: ' + img_dimensions + '; width: ' + img_dimensions + ';" onerror="this.src=\'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7\'; this.removeAttribute(\'onerror\'); this.removeAttribute(\'onload\');" onload="this.removeAttribute(\'onerror\'); this.removeAttribute(\'onload\');">' + first_part + '<span style="color: #4682B4; font-weight: bold;">' + val + '</span>' + second_part);
             }
 
             p.click(function() {
