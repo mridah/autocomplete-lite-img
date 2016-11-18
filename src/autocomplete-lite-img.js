@@ -48,11 +48,18 @@ jQuery.fn.extend({
         var defaults = {
                 items: '',
                 images: '',
+                args: []
             };
 
         params = $.extend(defaults, params);
 
         var item_data = params.items, callback = params.callback, image_data = params.images;
+
+        if (! Array.isArray(params.args)) 
+        {
+            console.error('Error : autocomplete-lite-img failed to initialize on [' + self.selector + ']. ' + ' args is not an array');
+            return;
+        }
 
         if(callback === undefined)
         {
@@ -67,6 +74,8 @@ jQuery.fn.extend({
            }
         }
 
+        params.args.push(self);
+
         var item_data_length = item_data.length; 
 
         if(item_data_length === image_data.length)
@@ -77,7 +86,7 @@ jQuery.fn.extend({
                 img_map[item_data[i].toLowerCase() + '#' + i] = image_data[i];
             }
 
-            mridautocomplete(self, self.selector, item_data, img_map, callback);
+            mridautocomplete(self, self.selector, item_data, img_map, callback, params.args);
         }
         else
         {
@@ -104,7 +113,7 @@ jQuery.fn.extend({
 
 function callback_dummy() {}
 
-function mridautocomplete(input, o_selector, item_data, image_data, callback) {
+function mridautocomplete(input, o_selector, item_data, image_data, callback, callback_args) {
 
     var mridautocomplete_timer = 0, img_dimensions;
 
@@ -216,8 +225,9 @@ function mridautocomplete(input, o_selector, item_data, image_data, callback) {
 
             p.click(function() {
                 input.val(p.text());
+                callback_args.push(p.attr('_ix'));
                 res.empty().hide(function(){
-                    callback.call(this, input, p.attr('_ix'));
+                    callback.apply(this, callback_args);
                 });
             });
 
@@ -308,8 +318,9 @@ function mridautocomplete(input, o_selector, item_data, image_data, callback) {
         {
             tmp = input.next().find('.item-selected');
             input.val(tmp.text());
+            callback_args.push(tmp.attr('_ix'));
             res.empty().hide(function(){
-                callback.call(this, input, tmp.attr('_ix'));
+                callback.apply(this, callback_args);
             });
         }
         else
