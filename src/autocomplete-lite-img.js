@@ -277,6 +277,7 @@ function mridautocomplete(input, o_selector, item_data, image_data, callback, ca
     });
 
     input.keydown(function(e) {
+        var autocomplete_div = input.next();
         if(e.keyCode == 40) /* down arrow */
         {
             e.preventDefault();
@@ -289,6 +290,9 @@ function mridautocomplete(input, o_selector, item_data, image_data, callback, ca
                 tmp.removeClass('item-selected');
                 tmp.next().css("background-color", "#DCDCDC");
                 tmp.next().addClass('item-selected');
+                autocomplete_div.animate({
+                    scrollTop: tmp.offset().top - autocomplete_div.offset().top + autocomplete_div.scrollTop()
+                }, 50);
             }
             else
             {
@@ -297,12 +301,11 @@ function mridautocomplete(input, o_selector, item_data, image_data, callback, ca
                 first.addClass('item-selected');
                 tmp = first;
             }
-
         }
         else if(e.keyCode == 38) /* up arrow */
         {
             e.preventDefault();
-            var tmp;
+            var tmp, up_height = 2 * input.next().find('.mrid-autocomplete-item').css('height').replace('px','');
             $('mrid-autocomplete-item').css("background-color", "white");
             if(input.next().find('.item-selected').length > 0)
             {
@@ -311,8 +314,10 @@ function mridautocomplete(input, o_selector, item_data, image_data, callback, ca
                 tmp.removeClass('item-selected');
                 tmp.prev().css("background-color", "#DCDCDC");
                 tmp.prev().addClass('item-selected');
+                autocomplete_div.animate({
+                    scrollTop: tmp.offset().top - autocomplete_div.offset().top + autocomplete_div.scrollTop() - up_height
+                }, 50);
             }
-
         }
         else if(e.keyCode == 13) /* enter key */
         {
