@@ -104,6 +104,7 @@ jQuery.fn.extend({
             self.next().remove();
 
             /* removing event listeners */
+            self.off('click');
             self.off('keyup');
             self.off('keydown');
         }
@@ -264,6 +265,14 @@ function mridautocomplete(input, o_selector, item_data, image_data, callback, ca
     var res = $("<div class='mridautocomplete-list' style='display: none;'/>");
     res.insertAfter(input);
 
+
+    input.click(function(){
+        clearTimeout(mridautocomplete_timer);
+        mridautocomplete_timer = setTimeout(function() {
+            changeInput(input, item_dataList);
+        }, 0);
+    });
+
     input.keyup(function(e) {
         /* if key pressed is not enter or arrow keys */
         if(e.keyCode != 37 && e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40 && e.keyCode != 13)
@@ -271,7 +280,7 @@ function mridautocomplete(input, o_selector, item_data, image_data, callback, ca
             clearTimeout(mridautocomplete_timer);
             mridautocomplete_timer = setTimeout(function() {
                changeInput(input, item_dataList);
-            }, 100); 
+            }, 100);
         }
 
     });
@@ -286,13 +295,18 @@ function mridautocomplete(input, o_selector, item_data, image_data, callback, ca
             if(input.next().find('.item-selected').length > 0)
             {
                 tmp = input.next().find('.item-selected');
-                tmp.css("background-color", "white");
-                tmp.removeClass('item-selected');
-                tmp.next().css("background-color", "#DCDCDC");
-                tmp.next().addClass('item-selected');
-                autocomplete_div.animate({
-                    scrollTop: tmp.offset().top - autocomplete_div.offset().top + autocomplete_div.scrollTop()
-                }, 50);
+
+                /* checking if this is the last item */
+                if(tmp.next().hasClass('mrid-autocomplete-item'))
+                {
+                    tmp.css("background-color", "white");
+                    tmp.removeClass('item-selected');
+                    tmp.next().css("background-color", "#DCDCDC");
+                    tmp.next().addClass('item-selected');
+                    autocomplete_div.animate({
+                        scrollTop: tmp.offset().top - autocomplete_div.offset().top + autocomplete_div.scrollTop()
+                    }, 50);
+                }
             }
             else
             {
