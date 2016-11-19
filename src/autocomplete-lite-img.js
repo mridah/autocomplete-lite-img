@@ -74,7 +74,6 @@ jQuery.fn.extend({
            }
         }
 
-        params.args.push(self);
 
         var item_data_length = item_data.length; 
 
@@ -98,8 +97,11 @@ jQuery.fn.extend({
     autocomplete_img_destroy: function () {
         self = this;
 
-        if(self.next().hasClass('mridautocomplete-list'))
+        if(self.hasClass('autocomplete-lite-img-input-node') && self.next().hasClass('mridautocomplete-list'))
         {
+            /* removing class */
+            self.removeClass('autocomplete-lite-img-input-node');
+
             /* removing autocomplete div */
             self.next().remove();
 
@@ -116,6 +118,7 @@ function callback_dummy() {}
 
 function mridautocomplete(input, o_selector, item_data, image_data, callback, callback_args) {
 
+    input.addClass('autocomplete-lite-img-input-node');
     var mridautocomplete_timer = 0, img_dimensions;
 
     /* not defining img dimensions in style since different initializations of the plugin can have different image sizes */
@@ -226,19 +229,24 @@ function mridautocomplete(input, o_selector, item_data, image_data, callback, ca
 
             p.click(function() {
                 input.val(p.text());
-                callback_args.push(p.attr('_ix'));
-                res.empty().hide(function(){
-                    callback.apply(this, callback_args);
+                args = callback_args.concat([res.prev(), p.attr('_ix')]);
+
+                /*
+                    if interval is set to 0 => callbacks like alert will fire
+                    before the autocomplete div is hidden
+                */
+                res.empty().removeAttr('style').hide(1,function() {
+                    callback.apply(this, args);
                 });
             });
 
             p.mouseenter(function() {
                 $('.mrid-autocomplete-item').css("background-color", "white");
-                $('.mrid-autocomplete-item').removeClass('item-selected');
-                $(this).addClass('item-selected');
+                $('.mrid-autocomplete-item').removeClass('autocomplete-lite-item-selected');
+                $(this).addClass('autocomplete-lite-item-selected');
                 $(this).css("background-color", "#DCDCDC");
             }).mouseleave(function() {
-                $(this).removeClass('item-selected');
+                $(this).removeClass('autocomplete-lite-item-selected');
                 $(this).css("background-color", "white");
             });
 
@@ -267,15 +275,18 @@ function mridautocomplete(input, o_selector, item_data, image_data, callback, ca
 
 
     input.click(function(){
-        clearTimeout(mridautocomplete_timer);
-        mridautocomplete_timer = setTimeout(function() {
-            changeInput(input, item_dataList);
-        }, 0);
+        if(! res.is(":visible") )
+        {
+            clearTimeout(mridautocomplete_timer);
+            mridautocomplete_timer = setTimeout(function() {
+                changeInput(input, item_dataList);
+            }, 0);
+        }
     });
 
     input.keyup(function(e) {
         /* if key pressed is not enter or arrow keys */
-        if(e.keyCode != 37 && e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40 && e.keyCode != 13)
+        if(e.keyCode != 37 && e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40 && e.keyCode != 13 && e.keyCode != 9)
         {
             clearTimeout(mridautocomplete_timer);
             mridautocomplete_timer = setTimeout(function() {
@@ -292,17 +303,17 @@ function mridautocomplete(input, o_selector, item_data, image_data, callback, ca
             e.preventDefault();
             var tmp;
             $('mrid-autocomplete-item').css("background-color", "white");
-            if(input.next().find('.item-selected').length > 0)
+            if(input.next().find('.autocomplete-lite-item-selected').length > 0)
             {
-                tmp = input.next().find('.item-selected');
+                tmp = input.next().find('.autocomplete-lite-item-selected');
 
                 /* checking if this is the last item */
                 if(tmp.next().hasClass('mrid-autocomplete-item'))
                 {
                     tmp.css("background-color", "white");
-                    tmp.removeClass('item-selected');
+                    tmp.removeClass('autocomplete-lite-item-selected');
                     tmp.next().css("background-color", "#DCDCDC");
-                    tmp.next().addClass('item-selected');
+                    tmp.next().addClass('autocomplete-lite-item-selected');
                     autocomplete_div.animate({
                         scrollTop: tmp.offset().top - autocomplete_div.offset().top + autocomplete_div.scrollTop()
                     }, 50);
@@ -312,7 +323,7 @@ function mridautocomplete(input, o_selector, item_data, image_data, callback, ca
             {
                 first = input.next().find('.mrid-autocomplete-item').first();
                 first.css("background-color", "#DCDCDC");
-                first.addClass('item-selected');
+                first.addClass('autocomplete-lite-item-selected');
                 tmp = first;
             }
         }
@@ -321,13 +332,13 @@ function mridautocomplete(input, o_selector, item_data, image_data, callback, ca
             e.preventDefault();
             var tmp, up_height = 2 * input.next().find('.mrid-autocomplete-item').css('height').replace('px','');
             $('mrid-autocomplete-item').css("background-color", "white");
-            if(input.next().find('.item-selected').length > 0)
+            if(input.next().find('.autocomplete-lite-item-selected').length > 0)
             {
-                tmp = input.next().find('.item-selected');
+                tmp = input.next().find('.autocomplete-lite-item-selected');
                 tmp.css("background-color", "white");
-                tmp.removeClass('item-selected');
+                tmp.removeClass('autocomplete-lite-item-selected');
                 tmp.prev().css("background-color", "#DCDCDC");
-                tmp.prev().addClass('item-selected');
+                tmp.prev().addClass('autocomplete-lite-item-selected');
                 autocomplete_div.animate({
                     scrollTop: tmp.offset().top - autocomplete_div.offset().top + autocomplete_div.scrollTop() - up_height
                 }, 50);
@@ -335,12 +346,17 @@ function mridautocomplete(input, o_selector, item_data, image_data, callback, ca
         }
         else if(e.keyCode == 13) /* enter key */
         {
-            tmp = input.next().find('.item-selected');
+            tmp = input.next().find('.autocomplete-lite-item-selected');
             input.val(tmp.text());
-            callback_args.push(tmp.attr('_ix'));
-            res.empty().hide(function(){
-                callback.apply(this, callback_args);
+            args = callback_args.concat([res.prev(), tmp.attr('_ix')]);
+            res.empty().removeAttr('style').hide(1,function() {
+                callback.apply(this, args);
             });
+        }
+        else if(e.keyCode == 9) /* tab key */
+        {
+            res.removeAttr('style');
+            res.empty().hide();
         }
         else
         {
@@ -348,13 +364,24 @@ function mridautocomplete(input, o_selector, item_data, image_data, callback, ca
         }
     });
 
+    /*
+        NOTE : blur cannot be used here since blur is called after losing focus.
+               focusout is called just before losing focus.
 
-    $(document).click(function(event) {
-      if (!$(event.target).closest('.mridautocomplete-list').length) {
-        res.removeAttr('style');
-        res.empty().hide();
-      }
+               If user has selected an item ( causing input to lose focus )
+                   => input.next().find('.autocomplete-lite-item-selected').length != 0
+                Else
+                   => input.next().find('.autocomplete-lite-item-selected').length == 0
+
+    */
+    input.focusout(function(e) {
+        if(!input.next().find('.autocomplete-lite-item-selected').length)
+        {
+            res.removeAttr('style');
+            res.empty().hide();
+        }
     });
+
 }
 
 })(jQuery);
